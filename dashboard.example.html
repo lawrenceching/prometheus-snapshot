@@ -1,0 +1,122 @@
+<html>
+    <head>
+        <title>Dashboard</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js" integrity="sha512-k37wQcV4v2h6jgYf5IUz1MoSKPpDs630XGSmCaCCOXxy2awgAWKHGZWr9nMyGgk3IOxA1NxdkN8r1JHgkUtMoQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <script type="module" src="./src/core/echart-option-builder.js"></script>
+        <style>
+            html, body {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            .container {
+                margin-left: 10px;
+                margin-right: 10px;
+            }
+
+            .tile {
+                width: 100%;
+                height: 500px;
+            }
+
+
+            /*.container {*/
+            /*    display: flex;*/
+            /*    flex-direction: row*/
+            /*}*/
+        </style>
+    </head>
+    <body>
+        <h1>Dashboard</h1>
+        <div id="dashboard" class="container text-center">
+
+        </div>
+        <script type="module" type="text/javascript">
+
+            import buildEchartOption from "./src/core/echart-option-builder.js";
+            import { UNITS } from "./src/core/echart-option-builder.js"
+
+            const TYPE_TIME_SERIES = 'time-series';
+
+            function renderTimeSeries(panel, elementId) {
+                var chart = echarts.init(document.getElementById(elementId));
+
+                const now = Date.now();
+                const dataSet = [
+                    {
+                        metric: 'pod-name_container_name',
+                        data: [
+                            {time: now + 1000 * 10, value: Math.floor(Math.random())},
+                            {time: now + 1000 * 20, value: Math.floor(Math.random())},
+                            {time: now + 1000 * 30, value: Math.floor(Math.random())},
+                            {time: now + 1000 * 40, value: Math.floor(Math.random())},
+                            {time: now + 1000 * 50, value: Math.floor(Math.random())},
+                            {time: now + 1000 * 60, value: Math.floor(Math.random())},
+                            {time: now + 1000 * 70, value: Math.floor(Math.random())},
+                            {time: now + 1000 * 80, value: Math.floor(Math.random())},
+                            {time: now + 1000 * 90, value: Math.floor(Math.random())},
+                            {time: now + 1000 * 100, value: Math.floor(Math.random())},
+                        ]
+                    }
+                ]
+                const option = buildEchartOption(dataSet, {
+                    unit: panel.unit,
+                })
+                chart.setOption(option);
+            }
+
+            const dashboardEl = document.getElementById('dashboard');
+
+            const dashboard = {
+                title: 'Performance Dashboard',
+                panels: [
+                    {
+                        title: 'CPU Usage',
+                        type: 'time-series',
+                        query: "SELECT * FROM cpu_usage",
+                        unit: UNITS.percent_0_to_1,
+                        dataSource: 'prometheus'
+                    },
+                    {
+                        title: 'CPU Usage',
+                        type: 'time-series',
+                        query: "SELECT * FROM cpu_usage",
+                        dataSource: 'prometheus'
+                    },
+
+                ]
+            }
+
+            let indexOfPanelId = 0;
+            const echartInitFunctions = [];
+
+            const panels = dashboard.panels;
+            for (const panel of panels) {
+                const id = `panel-${++indexOfPanelId}`;
+                dashboardEl.innerHTML = dashboardEl.innerHTML + `
+                <div class="row">
+                    <div class="panel-title">${panel.title}</div>
+                    <div id="${id}" class="col tile"></div>
+                </div>
+                `
+
+                const type = panel.type;
+
+                switch (type) {
+                    case TYPE_TIME_SERIES: {
+                        echartInitFunctions.push(() => {
+                            renderTimeSeries(panel, id);
+                        })
+                        break;
+                    }
+                }
+
+            }
+
+            echartInitFunctions.forEach(fn => fn());
+        </script>
+    </body>
+</html>

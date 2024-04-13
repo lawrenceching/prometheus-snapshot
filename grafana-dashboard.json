@@ -1,0 +1,1840 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "community.grafana.com",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 1754,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "U-QRJ7K4k"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 25
+              },
+              {
+                "color": "orange",
+                "value": 50
+              },
+              {
+                "color": "red",
+                "value": 75
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "0"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "4": {
+                        "index": 10,
+                        "text": "staff"
+                      },
+                      "5": {
+                        "index": 5,
+                        "text": "site feedback"
+                      },
+                      "6": {
+                        "index": 8,
+                        "text": "how to"
+                      },
+                      "9": {
+                        "index": 6,
+                        "text": "releases"
+                      },
+                      "11": {
+                        "index": 22,
+                        "text": "influx"
+                      },
+                      "13": {
+                        "index": 15,
+                        "text": "graphite"
+                      },
+                      "14": {
+                        "index": 16,
+                        "text": "elasticsearch"
+                      },
+                      "15": {
+                        "index": 21,
+                        "text": "prometheus"
+                      },
+                      "18": {
+                        "index": 14,
+                        "text": "installation"
+                      },
+                      "20": {
+                        "index": 12,
+                        "text": "configuration"
+                      },
+                      "22": {
+                        "index": 17,
+                        "text": "authentication"
+                      },
+                      "24": {
+                        "index": 18,
+                        "text": "time series"
+                      },
+                      "25": {
+                        "index": 20,
+                        "text": "stat"
+                      },
+                      "26": {
+                        "index": 19,
+                        "text": "table"
+                      },
+                      "30": {
+                        "index": 4,
+                        "text": "grafana plugin development"
+                      },
+                      "33": {
+                        "index": 0,
+                        "text": "no subcategory"
+                      },
+                      "34": {
+                        "index": 2,
+                        "text": "grafana cloud"
+                      },
+                      "38": {
+                        "index": 7,
+                        "text": "security announcements"
+                      },
+                      "39": {
+                        "index": 9,
+                        "text": "documentation"
+                      },
+                      "40": {
+                        "index": 3,
+                        "text": "tempo"
+                      },
+                      "41": {
+                        "index": 1,
+                        "text": "loki"
+                      },
+                      "42": {
+                        "index": 11,
+                        "text": "lounge"
+                      },
+                      "43": {
+                        "index": 13,
+                        "text": "azure monitor"
+                      },
+                      "44": {
+                        "index": 23,
+                        "text": "development / API"
+                      },
+                      "45": {
+                        "index": 24,
+                        "text": "plugin dev - sign & publish"
+                      },
+                      "46": {
+                        "index": 25,
+                        "text": "plugin dev - share & showcase"
+                      },
+                      "47": {
+                        "index": 26,
+                        "text": "plugin dev - announcements"
+                      },
+                      "50": {
+                        "index": 27,
+                        "text": "pie chart"
+                      },
+                      "51": {
+                        "index": 28,
+                        "text": "gauge"
+                      },
+                      "52": {
+                        "index": 29,
+                        "text": "bar chart"
+                      },
+                      "53": {
+                        "index": 30,
+                        "text": "bar gauge"
+                      },
+                      "54": {
+                        "index": 31,
+                        "text": "mysql"
+                      },
+                      "55": {
+                        "index": 32,
+                        "text": "postgres"
+                      },
+                      "56": {
+                        "index": 33,
+                        "text": "cloudwatch"
+                      },
+                      "57": {
+                        "index": 34,
+                        "text": "graph (old)"
+                      },
+                      "58": {
+                        "index": 35,
+                        "text": "zabbix"
+                      },
+                      "59": {
+                        "index": 36,
+                        "text": "mssql"
+                      },
+                      "60": {
+                        "index": 37,
+                        "text": "alerting"
+                      },
+                      "61": {
+                        "index": 38,
+                        "text": "dashboards"
+                      },
+                      "62": {
+                        "index": 39,
+                        "text": "explore"
+                      },
+                      "63": {
+                        "index": 40,
+                        "text": "live"
+                      },
+                      "64": {
+                        "index": 41,
+                        "text": "geomap"
+                      },
+                      "65": {
+                        "index": 42,
+                        "text": "data-links"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "response rate"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "response rate"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 16,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.1.0-69051",
+      "targets": [
+        {
+          "columns": [],
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "U-QRJ7K4k"
+          },
+          "filters": [],
+          "format": "table",
+          "global_query_id": "",
+          "groq": "*",
+          "key": "Q-a593ed2c-6fa3-4fed-bd71-f0c73a686291-0",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "rows",
+          "source": "url",
+          "type": "json",
+          "uql": "parse-json",
+          "url": "https://community.grafana.com/admin/plugins/explorer/queries/28/run?params=%7B%22date_from%22%3A%22${start}%22%2C%22date_to%22%3A%22${end}%22%2C%22cat%22%3A%22${category}%22%7D",
+          "url_options": {
+            "body_content_type": "application/json",
+            "body_type": "none",
+            "data": "",
+            "method": "POST"
+          }
+        },
+        {
+          "columns": [],
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "U-QRJ7K4k"
+          },
+          "filters": [],
+          "format": "table",
+          "global_query_id": "",
+          "groq": "*",
+          "hide": false,
+          "key": "Q-a593ed2c-6fa3-4fed-bd71-f0c73a686291-0",
+          "parser": "backend",
+          "refId": "B",
+          "root_selector": "rows",
+          "source": "url",
+          "type": "json",
+          "uql": "parse-json",
+          "url": "https://community.grafana.com/admin/plugins/explorer/queries/29/run?params=%7B%22date_from%22%3A%22${start}%22%2C%22date_to%22%3A%22${end}%22%2C%22cat%22%3A%22${category}%22%7D",
+          "url_options": {
+            "body_content_type": "application/json",
+            "body_type": "none",
+            "data": "",
+            "method": "POST"
+          }
+        }
+      ],
+      "title": "Response Rate per Category: from ${start} to ${end}",
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "replace": true,
+            "source": "A"
+          }
+        },
+        {
+          "id": "extractFields",
+          "options": {
+            "replace": true,
+            "source": "B"
+          }
+        },
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "0": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "1": {
+                "aggregations": [
+                  "max",
+                  "min"
+                ],
+                "operation": "aggregate"
+              },
+              "A 0": {
+                "aggregations": []
+              },
+              "Field": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "Last *": {
+                "aggregations": [
+                  "min",
+                  "max"
+                ],
+                "operation": "aggregate"
+              }
+            }
+          }
+        },
+        {
+          "disabled": true,
+          "id": "reduce",
+          "options": {
+            "includeTimeField": false,
+            "labelsToFields": false,
+            "mode": "seriesToRows",
+            "reducers": [
+              "lastNotNull"
+            ]
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "replied",
+            "binary": {
+              "left": "1 (max)",
+              "operator": "-",
+              "reducer": "sum",
+              "right": "1 (min)"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            }
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "response rate",
+            "binary": {
+              "left": "replied",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "1 (max)"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": false
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "0": false,
+              "1 (max)": false,
+              "1 (min)": false,
+              "replied": true,
+              "with response": false
+            },
+            "indexByName": {
+              "0": 0,
+              "1 (max)": 1,
+              "1 (min)": 3,
+              "replied": 2,
+              "response rate": 4
+            },
+            "renameByName": {
+              "0": "category",
+              "1 (max)": "total",
+              "1 (min)": "no reply",
+              "with response": "with response",
+              "with response / 1 (max)": "response rate"
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "U-QRJ7K4k"
+      },
+      "description": "filtered to return only categories with more than 20 topics",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 25
+              },
+              {
+                "color": "orange",
+                "value": 50
+              },
+              {
+                "color": "red",
+                "value": 75
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "0"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "4": {
+                        "index": 10,
+                        "text": "staff"
+                      },
+                      "5": {
+                        "index": 5,
+                        "text": "site feedback"
+                      },
+                      "6": {
+                        "index": 8,
+                        "text": "how to"
+                      },
+                      "9": {
+                        "index": 6,
+                        "text": "releases"
+                      },
+                      "11": {
+                        "index": 22,
+                        "text": "influx"
+                      },
+                      "13": {
+                        "index": 15,
+                        "text": "graphite"
+                      },
+                      "14": {
+                        "index": 16,
+                        "text": "elasticsearch"
+                      },
+                      "15": {
+                        "index": 21,
+                        "text": "prometheus"
+                      },
+                      "18": {
+                        "index": 14,
+                        "text": "installation"
+                      },
+                      "20": {
+                        "index": 12,
+                        "text": "configuration"
+                      },
+                      "22": {
+                        "index": 17,
+                        "text": "authentication"
+                      },
+                      "24": {
+                        "index": 18,
+                        "text": "time series"
+                      },
+                      "25": {
+                        "index": 20,
+                        "text": "stat"
+                      },
+                      "26": {
+                        "index": 19,
+                        "text": "table"
+                      },
+                      "30": {
+                        "index": 4,
+                        "text": "grafana plugin development"
+                      },
+                      "33": {
+                        "index": 0,
+                        "text": "no subcategory"
+                      },
+                      "34": {
+                        "index": 2,
+                        "text": "grafana cloud"
+                      },
+                      "38": {
+                        "index": 7,
+                        "text": "security announcements"
+                      },
+                      "39": {
+                        "index": 9,
+                        "text": "documentation"
+                      },
+                      "40": {
+                        "index": 3,
+                        "text": "tempo"
+                      },
+                      "41": {
+                        "index": 1,
+                        "text": "loki"
+                      },
+                      "42": {
+                        "index": 11,
+                        "text": "lounge"
+                      },
+                      "43": {
+                        "index": 13,
+                        "text": "azure monitor"
+                      },
+                      "44": {
+                        "index": 23,
+                        "text": "development / API"
+                      },
+                      "45": {
+                        "index": 24,
+                        "text": "plugin dev - sign & publish"
+                      },
+                      "46": {
+                        "index": 25,
+                        "text": "plugin dev - share & showcase"
+                      },
+                      "47": {
+                        "index": 26,
+                        "text": "plugin dev - announcements"
+                      },
+                      "50": {
+                        "index": 27,
+                        "text": "pie chart"
+                      },
+                      "51": {
+                        "index": 28,
+                        "text": "gauge"
+                      },
+                      "52": {
+                        "index": 29,
+                        "text": "bar chart"
+                      },
+                      "53": {
+                        "index": 30,
+                        "text": "bar gauge"
+                      },
+                      "54": {
+                        "index": 31,
+                        "text": "mysql"
+                      },
+                      "55": {
+                        "index": 32,
+                        "text": "postgres"
+                      },
+                      "56": {
+                        "index": 33,
+                        "text": "cloudwatch"
+                      },
+                      "57": {
+                        "index": 34,
+                        "text": "graph (old)"
+                      },
+                      "58": {
+                        "index": 35,
+                        "text": "zabbix"
+                      },
+                      "59": {
+                        "index": 36,
+                        "text": "mssql"
+                      },
+                      "60": {
+                        "index": 37,
+                        "text": "alerting"
+                      },
+                      "61": {
+                        "index": 38,
+                        "text": "dashboards"
+                      },
+                      "62": {
+                        "index": 39,
+                        "text": "explore"
+                      },
+                      "63": {
+                        "index": 40,
+                        "text": "live"
+                      },
+                      "64": {
+                        "index": 41,
+                        "text": "geomap"
+                      },
+                      "65": {
+                        "index": 42,
+                        "text": "data-links"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "response rate"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "response rate"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "percentage",
+                  "steps": [
+                    {
+                      "color": "blue",
+                      "value": null
+                    },
+                    {
+                      "color": "blue",
+                      "value": 50
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "with response"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "yellow",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "without response"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 24,
+        "x": 0,
+        "y": 5
+      },
+      "id": 6,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 45,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "9.3.6",
+      "targets": [
+        {
+          "columns": [],
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "U-QRJ7K4k"
+          },
+          "filters": [],
+          "format": "table",
+          "global_query_id": "",
+          "groq": "*",
+          "key": "Q-a593ed2c-6fa3-4fed-bd71-f0c73a686291-0",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "rows",
+          "source": "url",
+          "type": "json",
+          "uql": "parse-json",
+          "url": "https://community.grafana.com/admin/plugins/explorer/queries/8/run?params=%7B%22date_from%22%3A%22${start}%22%2C%22date_to%22%3A%22${end}%22%7D",
+          "url_options": {
+            "body_content_type": "application/json",
+            "body_type": "none",
+            "data": "",
+            "method": "POST"
+          }
+        },
+        {
+          "columns": [],
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "U-QRJ7K4k"
+          },
+          "filters": [],
+          "format": "table",
+          "global_query_id": "",
+          "groq": "*",
+          "hide": false,
+          "key": "Q-a593ed2c-6fa3-4fed-bd71-f0c73a686291-0",
+          "parser": "backend",
+          "refId": "B",
+          "root_selector": "rows",
+          "source": "url",
+          "type": "json",
+          "uql": "parse-json",
+          "url": "https://community.grafana.com/admin/plugins/explorer/queries/23/run?params=%7B%22date_from%22%3A%22${start}%22%2C%22date_to%22%3A%22${end}%22%7D",
+          "url_options": {
+            "body_content_type": "application/json",
+            "body_type": "none",
+            "data": "",
+            "method": "POST"
+          }
+        }
+      ],
+      "title": "Response Rate for Largest Categories",
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "replace": true,
+            "source": "A"
+          }
+        },
+        {
+          "id": "extractFields",
+          "options": {
+            "replace": true,
+            "source": "B"
+          }
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "string",
+                "targetField": "A 0"
+              },
+              {
+                "destinationType": "string",
+                "targetField": "B 0"
+              }
+            ],
+            "fields": {}
+          }
+        },
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "0": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "1": {
+                "aggregations": [
+                  "max",
+                  "min"
+                ],
+                "operation": "aggregate"
+              }
+            }
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "with response",
+            "binary": {
+              "left": "1 (max)",
+              "operator": "-",
+              "reducer": "sum",
+              "right": "1 (min)"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            }
+          }
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "greaterOrEqual",
+                  "options": {
+                    "value": 20
+                  }
+                },
+                "fieldName": "1 (max)"
+              }
+            ],
+            "match": "any",
+            "type": "include"
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "binary": {
+              "left": "with response",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "1 (max)"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": false
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "0": false,
+              "1 (max)": true,
+              "1 (min)": false,
+              "with response": false
+            },
+            "indexByName": {
+              "0": 0,
+              "1 (max)": 1,
+              "1 (min)": 4,
+              "with response": 3,
+              "with response / 1 (max)": 2
+            },
+            "renameByName": {
+              "0": "category",
+              "1 (max)": "total",
+              "1 (min)": "without response",
+              "with response": "with response",
+              "with response / 1 (max)": "response rate"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "with response"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "U-QRJ7K4k"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "category"
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "4": {
+                        "index": 10,
+                        "text": "staff"
+                      },
+                      "5": {
+                        "index": 5,
+                        "text": "site feedback"
+                      },
+                      "6": {
+                        "index": 8,
+                        "text": "how to"
+                      },
+                      "9": {
+                        "index": 6,
+                        "text": "releases"
+                      },
+                      "11": {
+                        "index": 22,
+                        "text": "influx"
+                      },
+                      "13": {
+                        "index": 15,
+                        "text": "graphite"
+                      },
+                      "14": {
+                        "index": 16,
+                        "text": "elasticsearch"
+                      },
+                      "15": {
+                        "index": 21,
+                        "text": "prometheus"
+                      },
+                      "18": {
+                        "index": 14,
+                        "text": "installation"
+                      },
+                      "20": {
+                        "index": 12,
+                        "text": "configuration"
+                      },
+                      "22": {
+                        "index": 17,
+                        "text": "authentication"
+                      },
+                      "24": {
+                        "index": 18,
+                        "text": "time series"
+                      },
+                      "25": {
+                        "index": 20,
+                        "text": "stat"
+                      },
+                      "26": {
+                        "index": 19,
+                        "text": "table"
+                      },
+                      "30": {
+                        "index": 4,
+                        "text": "grafana plugin development"
+                      },
+                      "33": {
+                        "index": 0,
+                        "text": "no subcategory"
+                      },
+                      "34": {
+                        "index": 2,
+                        "text": "grafana cloud"
+                      },
+                      "38": {
+                        "index": 7,
+                        "text": "security announcements"
+                      },
+                      "39": {
+                        "index": 9,
+                        "text": "documentation"
+                      },
+                      "40": {
+                        "index": 3,
+                        "text": "tempo"
+                      },
+                      "41": {
+                        "index": 1,
+                        "text": "loki"
+                      },
+                      "42": {
+                        "index": 11,
+                        "text": "lounge"
+                      },
+                      "43": {
+                        "index": 13,
+                        "text": "azure monitor"
+                      },
+                      "44": {
+                        "index": 23,
+                        "text": "development / API"
+                      },
+                      "45": {
+                        "index": 24,
+                        "text": "plugin dev - sign & publish"
+                      },
+                      "46": {
+                        "index": 25,
+                        "text": "plugin dev - share & showcase"
+                      },
+                      "47": {
+                        "index": 26,
+                        "text": "plugin dev - announcements"
+                      },
+                      "50": {
+                        "index": 27,
+                        "text": "pie chart"
+                      },
+                      "51": {
+                        "index": 28,
+                        "text": "gauge"
+                      },
+                      "52": {
+                        "index": 29,
+                        "text": "bar chart"
+                      },
+                      "53": {
+                        "index": 30,
+                        "text": "bar gauge"
+                      },
+                      "54": {
+                        "index": 31,
+                        "text": "mysql"
+                      },
+                      "55": {
+                        "index": 32,
+                        "text": "postgres"
+                      },
+                      "56": {
+                        "index": 33,
+                        "text": "cloudwatch"
+                      },
+                      "57": {
+                        "index": 34,
+                        "text": "graph (old)"
+                      },
+                      "58": {
+                        "index": 35,
+                        "text": "zabbix"
+                      },
+                      "59": {
+                        "index": 36,
+                        "text": "mssql"
+                      },
+                      "60": {
+                        "index": 37,
+                        "text": "alerting"
+                      },
+                      "61": {
+                        "index": 38,
+                        "text": "dashboards"
+                      },
+                      "62": {
+                        "index": 39,
+                        "text": "explore"
+                      },
+                      "63": {
+                        "index": 40,
+                        "text": "live"
+                      },
+                      "64": {
+                        "index": 41,
+                        "text": "geomap"
+                      },
+                      "65": {
+                        "index": 42,
+                        "text": "data-links"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "1"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Topic ID / Link"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "1"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "targetBlank": true,
+                    "title": "",
+                    "url": "https://community.grafana.com/t/${__value.text}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "2"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 114
+              },
+              {
+                "id": "displayName",
+                "value": "Title"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Topic ID / Link"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 70
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "category"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 146
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Title"
+            },
+            "properties": [
+              {
+                "id": "custom.width"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 16
+      },
+      "id": 9,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": true,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "11.1.0-69051",
+      "targets": [
+        {
+          "columns": [],
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "U-QRJ7K4k"
+          },
+          "filters": [],
+          "format": "table",
+          "global_query_id": "",
+          "groq": "*",
+          "key": "Q-a593ed2c-6fa3-4fed-bd71-f0c73a686291-0",
+          "parser": "simple",
+          "refId": "A",
+          "root_selector": "rows",
+          "source": "url",
+          "type": "json",
+          "uql": "parse-json",
+          "url": "https://community.grafana.com/admin/plugins/explorer/queries/14/run?params=%7B%22date_from%22%3A%22${start}%22%2C%22date_to%22%3A%22${end}%22%2C%22cat%22%3A%22${category}%22%7D",
+          "url_options": {
+            "body_content_type": "application/json",
+            "body_form": [],
+            "body_type": "x-www-form-urlencoded",
+            "data": "",
+            "headers": [
+              {
+                "key": "x-discourse-route",
+                "value": "query/run"
+              }
+            ],
+            "method": "POST",
+            "params": []
+          }
+        }
+      ],
+      "title": "\"${category}\" category: topics with no response: 22Q4",
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "format": "json",
+            "replace": true,
+            "source": "A"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "0": true
+            },
+            "indexByName": {},
+            "renameByName": {}
+          }
+        }
+      ],
+      "type": "table"
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 39,
+  "tags": [
+    "community.grafana.com"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "Alerting",
+          "value": "60"
+        },
+        "datasource": {
+          "type": "yesoreyeram-infinity-datasource",
+          "uid": "U-QRJ7K4k"
+        },
+        "definition": "Grafana Forum Data Explorer- (infinity) json",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Category",
+        "multi": false,
+        "name": "category",
+        "options": [],
+        "query": {
+          "infinityQuery": {
+            "columns": [],
+            "filters": [],
+            "format": "table",
+            "parser": "simple",
+            "refId": "variable",
+            "root_selector": "rows",
+            "source": "url",
+            "type": "json",
+            "url": "https://community.grafana.com/admin/plugins/explorer/queries/19/run",
+            "url_options": {
+              "body_content_type": "text/plain",
+              "body_type": "raw",
+              "data": "",
+              "method": "POST"
+            }
+          },
+          "query": "",
+          "queryType": "infinity"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "start of 2023q2",
+          "value": "2023-05-01"
+        },
+        "description": "pick a starting date for the query",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Start Date",
+        "multi": false,
+        "name": "start",
+        "options": [
+          {
+            "selected": false,
+            "text": "start of 2022q1",
+            "value": "2022-02-01"
+          },
+          {
+            "selected": false,
+            "text": "start of 2022q2",
+            "value": "2022-05-01"
+          },
+          {
+            "selected": false,
+            "text": "start of 2022q3",
+            "value": "2022-08-01"
+          },
+          {
+            "selected": false,
+            "text": "start of 2022q4",
+            "value": "2022-11-01"
+          },
+          {
+            "selected": false,
+            "text": "start of 2023q1",
+            "value": "2023-02-01"
+          },
+          {
+            "selected": true,
+            "text": "start of 2023q2",
+            "value": "2023-05-01"
+          },
+          {
+            "selected": false,
+            "text": "start of 2023q3",
+            "value": "2023-08-01"
+          },
+          {
+            "selected": false,
+            "text": "start of 2023q4",
+            "value": "2023-11-01"
+          }
+        ],
+        "query": "start of 2022q1 : 2022-02-01, start of 2022q2 : 2022-05-01, start of 2022q3 : 2022-08-01, start of 2022q4 : 2022-11-01, start of 2023q1 : 2023-02-01, start of 2023q2 : 2023-05-01, start of 2023q3 : 2023-08-01, start of 2023q4 : 2023-11-01",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "end of 2023q2",
+          "value": "2023-08-01"
+        },
+        "description": "pick an end date for the query",
+        "hide": 0,
+        "includeAll": false,
+        "label": "End Date",
+        "multi": false,
+        "name": "end",
+        "options": [
+          {
+            "selected": false,
+            "text": "end of 2022q1",
+            "value": "2022-05-01"
+          },
+          {
+            "selected": false,
+            "text": "end of 2022q2",
+            "value": "2022-08-01"
+          },
+          {
+            "selected": false,
+            "text": "end of 2022q3",
+            "value": "2022-11-01"
+          },
+          {
+            "selected": false,
+            "text": "end of 2022q4",
+            "value": "2023-02-01"
+          },
+          {
+            "selected": false,
+            "text": "end of 2023q1",
+            "value": "2023-05-01"
+          },
+          {
+            "selected": true,
+            "text": "end of 2023q2",
+            "value": "2023-08-01"
+          },
+          {
+            "selected": false,
+            "text": "end of 2023q3",
+            "value": "2023-11-01"
+          },
+          {
+            "selected": false,
+            "text": "end of 2023q4",
+            "value": "2024-02-01"
+          },
+          {
+            "selected": false,
+            "text": "end of 2024q1 : 2024-05-01",
+            "value": "end of 2024q1 : 2024-05-01"
+          }
+        ],
+        "query": "end of 2022q1 : 2022-05-01, end of 2022q2 : 2022-08-01, end of 2022q3 : 2022-11-01, end of 2022q4 : 2023-02-01, end of 2023q1 : 2023-05-01, end of 2023q2 : 2023-08-01, end of 2023q3 : 2023-11-01, end of 2023q4 : 2024-02-01,\nend of 2024q1 : 2024-05-01",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "allValue": "",
+        "current": {
+          "selected": false,
+          "text": "dashboards",
+          "value": "61"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Category",
+        "multi": false,
+        "name": "copy_of_category",
+        "options": [
+          {
+            "selected": false,
+            "text": "installation",
+            "value": "18"
+          },
+          {
+            "selected": false,
+            "text": "alerting",
+            "value": "60"
+          },
+          {
+            "selected": false,
+            "text": "piechart",
+            "value": "50"
+          },
+          {
+            "selected": false,
+            "text": "timeseries",
+            "value": "24"
+          },
+          {
+            "selected": false,
+            "text": "no subcategory",
+            "value": "33"
+          },
+          {
+            "selected": false,
+            "text": "loki",
+            "value": "41"
+          },
+          {
+            "selected": false,
+            "text": "grafana cloud",
+            "value": "34"
+          },
+          {
+            "selected": false,
+            "text": "tempo",
+            "value": "40"
+          },
+          {
+            "selected": false,
+            "text": "plugin development",
+            "value": "30"
+          },
+          {
+            "selected": false,
+            "text": "documentation",
+            "value": "39"
+          },
+          {
+            "selected": false,
+            "text": "lounge",
+            "value": "42"
+          },
+          {
+            "selected": false,
+            "text": "configuration",
+            "value": "20"
+          },
+          {
+            "selected": false,
+            "text": "azure monitor",
+            "value": "43"
+          },
+          {
+            "selected": false,
+            "text": "graphite",
+            "value": "13"
+          },
+          {
+            "selected": false,
+            "text": "elasticsearch",
+            "value": "14"
+          },
+          {
+            "selected": false,
+            "text": "authentication",
+            "value": "22"
+          },
+          {
+            "selected": false,
+            "text": "time series",
+            "value": "24"
+          },
+          {
+            "selected": false,
+            "text": "table",
+            "value": "26"
+          },
+          {
+            "selected": false,
+            "text": "stat",
+            "value": "25"
+          },
+          {
+            "selected": false,
+            "text": "prometheus",
+            "value": "15"
+          },
+          {
+            "selected": false,
+            "text": "influxDB",
+            "value": "11"
+          },
+          {
+            "selected": false,
+            "text": "development/api",
+            "value": "44"
+          },
+          {
+            "selected": false,
+            "text": "plugins - publishing",
+            "value": "45"
+          },
+          {
+            "selected": false,
+            "text": "plugins - showcase",
+            "value": "46"
+          },
+          {
+            "selected": false,
+            "text": "plugins - announcements",
+            "value": "47"
+          },
+          {
+            "selected": false,
+            "text": "gauge",
+            "value": "51"
+          },
+          {
+            "selected": false,
+            "text": "bar chart",
+            "value": "52"
+          },
+          {
+            "selected": false,
+            "text": "bar gauge",
+            "value": "53"
+          },
+          {
+            "selected": false,
+            "text": "mysql",
+            "value": "54"
+          },
+          {
+            "selected": false,
+            "text": "postgres",
+            "value": "55"
+          },
+          {
+            "selected": false,
+            "text": "cloudwatch",
+            "value": "56"
+          },
+          {
+            "selected": false,
+            "text": "graph (old)",
+            "value": "57"
+          },
+          {
+            "selected": false,
+            "text": "zabbix",
+            "value": "58"
+          },
+          {
+            "selected": false,
+            "text": "mssql",
+            "value": "59"
+          },
+          {
+            "selected": true,
+            "text": "dashboards",
+            "value": "61"
+          },
+          {
+            "selected": false,
+            "text": "explore",
+            "value": "62"
+          },
+          {
+            "selected": false,
+            "text": "live",
+            "value": "63"
+          },
+          {
+            "selected": false,
+            "text": "geomap",
+            "value": "64"
+          },
+          {
+            "selected": false,
+            "text": "data-links",
+            "value": "65"
+          }
+        ],
+        "query": "installation : 18, alerting : 60, piechart : 50, timeseries : 24, no subcategory : 33, loki : 41, grafana cloud : 34, tempo : 40, plugin development : 30, documentation : 39, lounge : 42, configuration : 20, azure monitor : 43, graphite : 13, elasticsearch : 14, authentication : 22, time series : 24, table : 26, stat : 25, prometheus : 15, influxDB : 11, development/api : 44, plugins - publishing : 45, plugins - showcase : 46, plugins - announcements : 47, gauge : 51, bar chart : 52, bar gauge : 53, mysql : 54, postgres : 55, cloudwatch : 56, graph (old) : 57, zabbix : 58, mssql : 59, dashboards : 61, explore : 62, live : 63, geomap : 64, data-links : 65",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "2022-11-01T10:00:00.000Z",
+    "to": "2023-02-01T09:59:59.000Z"
+  },
+  "timeRangeUpdatedDuringEditOrView": false,
+  "timepicker": {
+    "hidden": true
+  },
+  "timezone": "",
+  "title": "Grafana Community Forum - Category Response Rate",
+  "uid": "6Hg9LVd4z",
+  "version": 71,
+  "weekStart": ""
+}
