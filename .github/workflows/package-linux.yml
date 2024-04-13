@@ -28,6 +28,7 @@ jobs:
           cache: 'npm'
       - run: |
           npm i
+          npm run dashboard
           mkdir /tmp/prometheus-snaphost
           cp package.json /tmp/prometheus-snaphost
           cp -r src/* /tmp/prometheus-snaphost
