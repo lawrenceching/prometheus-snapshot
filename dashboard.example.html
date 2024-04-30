@@ -34,14 +34,20 @@
         <div id="dashboard" class="container text-center">
 
         </div>
+        <script id="persistent-data">
+            console.log(`load persistent-data`)
+            window.persistentData = {}
+        </script>
         <script type="module" type="text/javascript">
 
             import buildEchartOption from "./src/core/echart-option-builder.js";
+            import Prometheus from "./src/datasource/prometheus.js";
             import { UNITS } from "./src/core/echart-option-builder.js"
 
             const TYPE_TIME_SERIES = 'time-series';
 
-            function renderTimeSeries(panel, elementId) {
+            console.log(`persistent data: `, window.persistentData);
+            function renderExampleTimeSeries(panel, elementId) {
                 var chart = echarts.init(document.getElementById(elementId));
 
                 const now = Date.now();
@@ -68,27 +74,87 @@
                 chart.setOption(option);
             }
 
+            function renderTimeSeries(panel, elementId, data) {
+                console.log(`render time series panel: data=${JSON.stringify(data)}`)
+                var chart = echarts.init(document.getElementById(elementId));
+                const dataSet = [
+                    {
+                        metric: 'pod-name_container_name',
+                        data
+                    }
+                ]
+                const option = buildEchartOption(dataSet, {
+                    unit: panel.unit,
+                })
+                chart.setOption(option);
+            }
+
+            function prometheusResponseToEchartData(resp) {
+
+                /**
+                 * resp is:
+                 * {
+                 *     "status": "success",
+                 *     "data": {
+                 *         "resultType": "matrix",
+                 *         "result": [
+                 *             {
+                 *                 "metric": {
+                 *                     "handler": "subroute",
+                 *                     "instance": "localhost:2019",
+                 *                     "job": "caddy",
+                 *                     "server": "srv0"
+                 *                 },
+                 *                 "values": [
+                 *                     [
+                 *                         1714492874.299,
+                 *                         "1.3555555555555554"
+                 *                     ],
+                 *                     [
+                 *                         1714496472.299,
+                 *                         "1.2"
+                 *                     ]
+                 *                 ]
+                 *             }
+                 *         ]
+                 *     }
+                 * }
+                 */
+
+                return resp.data.result[0].values.map(value => {
+                    return [
+                        value[0],
+                        Math.floor(value[1] * 10) / 10
+                    ]
+                });
+
+            }
+
             const dashboardEl = document.getElementById('dashboard');
 
             const dashboard = {
                 title: 'Performance Dashboard',
+                dataSources: [
+                    {
+                        type: "prometheus",
+                        address: 'https://prometheus.demo.do.prometheus.io'
+                    }
+                ],
                 panels: [
                     {
-                        title: 'CPU Usage',
+                        title: 'http_request_per_seconds',
                         type: 'time-series',
-                        query: "SELECT * FROM cpu_usage",
-                        unit: UNITS.percent_0_to_1,
+                        query: "rate(caddy_http_requests_total[1m])",
+                        unit: UNITS.number,
                         dataSource: 'prometheus'
                     },
-                    {
-                        title: 'CPU Usage',
-                        type: 'time-series',
-                        query: "SELECT * FROM cpu_usage",
-                        dataSource: 'prometheus'
-                    },
-
                 ]
             }
+
+            const address = dashboard.dataSources[0].address;
+            const prometheus = new Prometheus(address);
+            const panel = dashboard.panels[0];
+            const {title, query} = panel;
 
             let indexOfPanelId = 0;
             const echartInitFunctions = [];
@@ -103,17 +169,35 @@
                 </div>
                 `
 
-                const type = panel.type;
+                const {title, query, type} = panel;
+                let data = window.persistentData[title];
+
+                if(data === undefined) {
+                    console.log(`no persistent data found for "${title}", try to fetch from remote server ${address}`)
+                    const resp = await prometheus.queryRange(query, 1714492874.299, 1714496474.299);
+
+                    if(!resp.ok) {
+                        console.log(`failed to fetch data from ${address}`)
+                    } else {
+                        const json = await resp.json();
+                        data = window.persistentData[title] = prometheusResponseToEchartData(json);
+                    }
+
+                    const scriptEl = document.getElementById('persistent-data')
+                    scriptEl.innerHTML = `${scriptEl.innerHTML}
+                     window.persistentData["${title}"] = ${JSON.stringify(data)}
+                    `
+                    console.log(`persistent "${title}" data into HTML`);
+                }
 
                 switch (type) {
                     case TYPE_TIME_SERIES: {
                         echartInitFunctions.push(() => {
-                            renderTimeSeries(panel, id);
+                            renderTimeSeries(panel, id, data);
                         })
                         break;
                     }
                 }
-
             }
 
             echartInitFunctions.forEach(fn => fn());

@@ -124,7 +124,7 @@ function buildEchartOption(dataSet, options) {
                 }
             }
         },
-        series: dataSet.map(data => {
+        series: dataSet.map(item => {
             const now = Date.now();
             const dataSet = {
                 name: 'pod-name_container_name',
@@ -139,15 +139,16 @@ function buildEchartOption(dataSet, options) {
                         type: 'value',
                         boundaryGap: [0, '100%']
                     },
-                data: [
-                    [now, Math.floor(Math.random() * 10)],
-                    [now + 1000, Math.floor(Math.random() * 10)],
-                    [now + 2000, Math.floor(Math.random() * 10)],
-                    [now + 3000, Math.floor(Math.random() * 10)],
-                    [now + 4000, Math.floor(Math.random() * 10)],
-                    [now + 5000, Math.floor(Math.random() * 10)],
-                    [now + 6000, Math.floor(Math.random() * 10)]
-                ]
+                /**
+                 * data is an array that contains a list of arrays:
+                 * [
+                 *     [1714492874.299,"1.3555555555555554"],
+                 *     [1714492888.299,"1.2444444444444442"]
+                 * ]
+                 *
+                 * The inner array has two item, the first item is timestamp in unix milliseconds, and second item is the value
+                 */
+                data: item.data
             }
             return dataSet
         })

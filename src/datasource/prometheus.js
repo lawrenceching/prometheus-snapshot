@@ -1,8 +1,4 @@
-import fetch from 'node-fetch';
-import debug from 'debug';
-import assert from "assert";
-
-const log = debug('http');
+// import fetch from 'node-fetch'
 
 const DEFAULT_OPTIONS = {
     step: 14
@@ -33,26 +29,9 @@ class Prometheus {
         url.searchParams.append('start', startInSeconds)
         url.searchParams.append('end', endInSeconds)
         url.searchParams.append('step', options.step)
-        log(`> ${url.href}`)
+        // log(`> ${url.href}`)
         const resp = await fetch(url.href)
-        const json = await resp.json();
-
-        if(!resp.ok) {
-            assert.fail(`Unable to query from Prometheus: ${JSON.stringify(json, null, 4)}`)
-        }
-
-        log(`< ${resp.status} : ${JSON.stringify(json, null, 4)}`)
-
-        return json.data.result.map(result => {
-            const name = getName(result)
-            const data = result.values.map(d => {
-                return [d[0] * 1000, d[1]];
-            });
-            return {
-                name,
-                values: data
-            }
-        });
+        return resp;
     }
 
     async queryRangeSince (promQL, durationInSeconds, options) {

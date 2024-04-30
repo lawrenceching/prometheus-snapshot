@@ -11,10 +11,11 @@
     "build": "parcel build ./dashboard.example.html && node build/inline.js"
   },
   "dependencies": {
-    "debug": "^4.3.2"
+
   },
   "devDependencies": {
     "parcel": "^2.12.0",
+    "puppeteer": "^22.7.1",
     "web-resource-inliner": "^6.0.1"
   }
 }
