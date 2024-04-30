@@ -27,7 +27,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - run: |
-          npm i
           npm install -O @parcel/watcher-linux-x64-glibc
+          npm i
           npm dedupe
           npm run build
