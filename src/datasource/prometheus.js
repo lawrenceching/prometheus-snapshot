@@ -31,6 +31,9 @@ class Prometheus {
         url.searchParams.append('step', options.step)
         // log(`> ${url.href}`)
         const resp = await fetch(url.href)
+
+        // window.fetchCache[url] = resp;
+
         return resp;
     }
 

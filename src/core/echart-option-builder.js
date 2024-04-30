@@ -7,7 +7,6 @@ const SUPPORTED_UNITS = {
 };
 
 
-
 const defaultOptions = {
     unit: SUPPORTED_UNITS.number,
 }
@@ -19,16 +18,16 @@ formatters[SUPPORTED_UNITS.bytes] = (value) => {
     const mb = 1000 * kb;
     const gb = 1000 * mb;
     const tb = 1000 * gb;
-    if(value > tb) {
+    if (value > tb) {
         return `${(value / tb).toFixed(2)} TB`;
     }
-    if(value > gb) {
+    if (value > gb) {
         return `${(value / gb).toFixed(2)} GB`;
     }
-    if(value > mb) {
+    if (value > mb) {
         return `${(value / mb).toFixed(2)} MB`;
     }
-    if(value > kb) {
+    if (value > kb) {
         return `${(value / kb).toFixed(2)} KB`;
     }
     return `${(value / kb).toFixed(2)} B`;
@@ -46,6 +45,49 @@ formatters[SUPPORTED_UNITS.number] = (value) => {
     return `${value}`
 }
 
+/**
+ * {
+ *                     "handler": "subroute",
+ *                     "instance": "localhost:2019",
+ *                     "job": "caddy",
+ *                     "server": "srv0",
+ *                     "<other metric key>": "<other values>"
+ * }
+ * @param metric
+ */
+function nameOf(metric) {
+    const labels = []
+    for (const [key, value] of Object.entries(metric)) {
+        labels.push(`${key}=${value}`)
+    }
+    return labels.join(' ');
+}
+
+/**
+
+ * dataSet is:
+ * [
+ *             {
+ *                 "metric": {
+ *                     "handler": "subroute",
+ *                     "instance": "localhost:2019",
+ *                     "job": "caddy",
+ *                     "server": "srv0"
+ *                 },
+ *                 "values": [
+ *                     [
+ *                         1714492874.299,
+ *                         "1.3555555555555554"
+ *                     ],
+ *                     [
+ *                         1714496472.299,
+ *                         "1.2"
+ *                     ]
+ *                 ]
+ *             }
+ * ]
+ * @param dataSet
+ */
 function buildEchartOption(dataSet, options) {
     const {
         title,
@@ -58,6 +100,7 @@ function buildEchartOption(dataSet, options) {
         output,
         showLegend
     } = Object.assign({}, defaultOptions, options);
+
     const option = {
         tooltip: {
             trigger: 'axis',
@@ -127,18 +170,18 @@ function buildEchartOption(dataSet, options) {
         series: dataSet.map(item => {
             const now = Date.now();
             const dataSet = {
-                name: 'pod-name_container_name',
-                    type: 'line',
-                    smooth: true,
-                    symbol: 'none',
-                    xAxis: {
-                        type: 'time',
-                        boundaryGap: false
-                    },
-                    yAxis: {
-                        type: 'value',
-                        boundaryGap: [0, '100%']
-                    },
+                name: nameOf(item.metric),
+                type: 'line',
+                smooth: true,
+                symbol: 'none',
+                xAxis: {
+                    type: 'time',
+                    boundaryGap: false
+                },
+                yAxis: {
+                    type: 'value',
+                    boundaryGap: [0, '100%']
+                },
                 /**
                  * data is an array that contains a list of arrays:
                  * [
@@ -148,7 +191,12 @@ function buildEchartOption(dataSet, options) {
                  *
                  * The inner array has two item, the first item is timestamp in unix milliseconds, and second item is the value
                  */
-                data: item.data
+                data: item.values.map(value => {
+                    return [
+                        value[0],
+                        Math.floor(value[1] * 10) / 10
+                    ]
+                })
             }
             return dataSet
         })

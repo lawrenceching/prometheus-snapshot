@@ -35,8 +35,28 @@
 
         </div>
         <script id="persistent-data">
-            console.log(`load persistent-data`)
-            window.persistentData = {}
+            window.originFetch = window.fetch;
+            window.fetch = function(url) {
+                const cacheResp = window.fetchCache[url];
+                if(cacheResp !== undefined) {
+                    console.log(`return cached HTTP response: ${url}`)
+                    return {
+                      ok: true,
+                      url: url,
+                      json: async () => {
+                          return JSON.parse(cacheResp)
+                      },
+                      text: async() => {
+                          return cacheResp;
+                      }
+                    }
+                }
+
+                return window.originFetch.apply(null, arguments)
+            }
+            // map of URL to HTTP response
+            window.fetchCache = {}
+
         </script>
         <script type="module" type="text/javascript">
 
@@ -45,8 +65,6 @@
             import { UNITS } from "./src/core/echart-option-builder.js"
 
             const TYPE_TIME_SERIES = 'time-series';
-
-            console.log(`persistent data: `, window.persistentData);
             function renderExampleTimeSeries(panel, elementId) {
                 var chart = echarts.init(document.getElementById(elementId));
 
@@ -74,16 +92,38 @@
                 chart.setOption(option);
             }
 
+            /**
+
+             * data is:
+             * [
+             *             {
+             *                 "metric": {
+             *                     "handler": "subroute",
+             *                     "instance": "localhost:2019",
+             *                     "job": "caddy",
+             *                     "server": "srv0"
+             *                 },
+             *                 "values": [
+             *                     [
+             *                         1714492874.299,
+             *                         "1.3555555555555554"
+             *                     ],
+             *                     [
+             *                         1714496472.299,
+             *                         "1.2"
+             *                     ]
+             *                 ]
+             *             }
+             *
+             * @param panel
+             * @param elementId
+             * @param data
+             */
             function renderTimeSeries(panel, elementId, data) {
                 console.log(`render time series panel: data=${JSON.stringify(data)}`)
                 var chart = echarts.init(document.getElementById(elementId));
-                const dataSet = [
-                    {
-                        metric: 'pod-name_container_name',
-                        data
-                    }
-                ]
-                const option = buildEchartOption(dataSet, {
+
+                const option = buildEchartOption(data, {
                     unit: panel.unit,
                 })
                 chart.setOption(option);
@@ -121,12 +161,7 @@
                  * }
                  */
 
-                return resp.data.result[0].values.map(value => {
-                    return [
-                        value[0],
-                        Math.floor(value[1] * 10) / 10
-                    ]
-                });
+                return resp.data.result;
 
             }
 
@@ -170,30 +205,26 @@
                 `
 
                 const {title, query, type} = panel;
-                let data = window.persistentData[title];
 
-                if(data === undefined) {
-                    console.log(`no persistent data found for "${title}", try to fetch from remote server ${address}`)
-                    const resp = await prometheus.queryRange(query, 1714492874.299, 1714496474.299);
-
-                    if(!resp.ok) {
-                        console.log(`failed to fetch data from ${address}`)
-                    } else {
-                        const json = await resp.json();
-                        data = window.persistentData[title] = prometheusResponseToEchartData(json);
-                    }
-
-                    const scriptEl = document.getElementById('persistent-data')
-                    scriptEl.innerHTML = `${scriptEl.innerHTML}
-                     window.persistentData["${title}"] = ${JSON.stringify(data)}
-                    `
-                    console.log(`persistent "${title}" data into HTML`);
+                const resp = await prometheus.queryRange(query, 1714492874.299, 1714496474.299);
+                let data = null;
+                if(!resp.ok) {
+                    console.log(`failed to fetch data from ${address}`)
+                } else {
+                    const json = data = await resp.json();
+                    window.fetchCache[resp.url] = JSON.stringify(json);
                 }
+
+                const scriptEl = document.getElementById('persistent-data')
+                scriptEl.innerHTML = `${scriptEl.innerHTML}
+                 window.fetchCache = ${JSON.stringify(window.fetchCache)}
+                `
+                console.log(`persistent "${title}" data into HTML`);
 
                 switch (type) {
                     case TYPE_TIME_SERIES: {
                         echartInitFunctions.push(() => {
-                            renderTimeSeries(panel, id, data);
+                            renderTimeSeries(panel, id, prometheusResponseToEchartData(data));
                         })
                         break;
                     }
