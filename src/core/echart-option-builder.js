@@ -38,7 +38,7 @@ formatters[SUPPORTED_UNITS.percent_0_to_1] = (value) => {
 }
 
 formatters[SUPPORTED_UNITS.second] = (value) => {
-    return `${value * 1000}ms`
+    return `${value}ms`
 }
 
 formatters[SUPPORTED_UNITS.number] = (value) => {
@@ -192,9 +192,20 @@ function buildEchartOption(dataSet, options) {
                  * The inner array has two item, the first item is timestamp in unix milliseconds, and second item is the value
                  */
                 data: item.values.map(value => {
+                    const timestampInUnixSeconds = value[0];
+                    let number = value[1] === "NaN" ? 0 : value[1];
+
+                    switch (unit) {
+                        case SUPPORTED_UNITS.second : {
+                            number = number * 1000;
+                            break;
+                        }
+                    }
+
+
                     return [
-                        value[0],
-                        Math.floor(value[1] * 10) / 10
+                        timestampInUnixSeconds,
+                        Math.floor(number * 10) / 10
                     ]
                 })
             }
