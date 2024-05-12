@@ -22,6 +22,10 @@
                 height: 500px;
             }
 
+            .divider {
+                margin-top: 25px;
+            }
+
 
             /*.container {*/
             /*    display: flex;*/
@@ -183,6 +187,13 @@
                         unit: UNITS.number,
                         dataSource: 'prometheus'
                     },
+                    {
+                        title: 'CPU Usage',
+                        type: 'time-series',
+                        query: "sum(rate(process_cpu_seconds_total[1m])) by (instance, job) * 100",
+                        unit: UNITS.percent_0_to_1,
+                        dataSource: 'prometheus'
+                    },
                 ]
             }
 
@@ -201,6 +212,7 @@
                 <div class="row">
                     <div class="panel-title">${panel.title}</div>
                     <div id="${id}" class="col tile"></div>
+                    <div class="divider"></div>
                 </div>
                 `
 
