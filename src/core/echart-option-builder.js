@@ -205,7 +205,7 @@ function buildEchartOption(dataSet, options) {
 
                     return [
                         timestampInUnixSeconds,
-                        Math.floor(number * 10) / 10
+                        Math.floor(number * 100) / 100
                     ]
                 })
             }
