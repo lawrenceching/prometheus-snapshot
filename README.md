@@ -99,3 +99,13 @@ docker cp $ID:/tmp/metrics ./
 # Remove container
 docker container rm $ID
 ```
+
+## Development
+
+macOS
+
+Add below items to optionalDependencies
+```
+"@parcel/watcher-darwin-arm64": "2.4.1",
+"lightningcss-darwin-arm64": "1.24.1"
+```

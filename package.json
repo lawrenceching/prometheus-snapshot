@@ -18,7 +18,6 @@
     "web-resource-inliner": "^6.0.1"
   },
   "optionalDependencies": {
-    "@parcel/watcher-darwin-arm64": "2.4.1",
-    "lightningcss-darwin-arm64": "1.24.1"
+
   }
 }
