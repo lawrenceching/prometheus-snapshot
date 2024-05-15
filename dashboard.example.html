@@ -309,13 +309,16 @@
             }
             case TYPE_ROW: {
                 const subPanels = panel.panels;
+                const rowId = `echart-row-${uuidv4()}`;
                 console.log(`rendering row ${title} with ${subPanels.length} sub panels`);
                 dashboardEl.innerHTML = dashboardEl.innerHTML + `
+
                     <div class="tile container text-center">
                         <div class="row">
-                            <div class="panel-title">${panel.title}</div>
+                            <div class="h1 panel-title">${panel.title}</div>
+                            <button class="btn btn-dark" type="button" data-bs-toggle="collapse" data-bs-target="#${rowId}" aria-expanded="false" aria-controls="${rowId}">Collapse</button>
                         </div>
-                        <div class="row">${renderPanelsInElement(subPanels)}</div>
+                        <div class="row collapse show" id="${rowId}">${renderPanelsInElement(subPanels)}</div>
 
                     </div>
                     <div class="tile divider"></div>
