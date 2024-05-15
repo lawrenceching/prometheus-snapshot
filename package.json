@@ -8,7 +8,7 @@
   "scripts": {
     "start": "parcel",
     "dev": "parcel serve",
-    "build": "parcel build ./dashboard.example.html && node build/inline.js"
+    "build": "node build/inline.js"
   },
   "dependencies": {
 
@@ -19,5 +19,9 @@
   },
   "optionalDependencies": {
 
+  },
+  "web-resource-inliner": {
+    "source": "./dashboard.example.html",
+    "destination": "./dist/dashboard.example.html"
   }
 }
