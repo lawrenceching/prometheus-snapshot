@@ -34,14 +34,18 @@
         }
 
         .chart {
-            width: 100%;
-            height: 300px;
+            width: 1500px;
+            height: 1500px;
         }
 
         .divider {
             background-color: grey;
             width: 100%;
             height: 1px;
+        }
+
+        .chart svg {
+            user-select: auto !important;
         }
 
 
@@ -81,6 +85,10 @@
 </script>
 <script type="module">
 
+    window.echartOptions = {
+        renderer: 'svg'
+    }
+
     import buildEchartOption from "./src/core/echart-option-builder.js";
     import Prometheus from "./src/datasource/prometheus.js";
     import {UNITS} from "./src/core/echart-option-builder.js"
@@ -108,7 +116,7 @@
                 ]
             }
         ]
-        const option = buildEchartOption(dataSet, {
+        const option = buildEchartOption(panel, dataSet, {
             unit: panel.unit,
         })
         chart.setOption(option);
@@ -143,12 +151,17 @@
      */
     function renderTimeSeries(panel, elementId, data) {
         console.log(`render time series panel: data=${JSON.stringify(data)}`)
-        var chart = echarts.init(document.getElementById(elementId));
+        var chart = echarts.init(document.getElementById(elementId), null, {
+            renderer: window.echartOptions.renderer || 'svg',
+            useDirtyRect: false
+        });
 
-        const option = buildEchartOption(data, {
+        const option = buildEchartOption(panel, data, {
             unit: panel.unit,
         })
         chart.setOption(option);
+        console.log(`register resize event listener for echart ${panel.title}`);
+        window.addEventListener('resize', chart.resize)
     }
 
     function prometheusResponseToEchartData(resp) {
@@ -259,11 +272,17 @@
 
         console.log(`created echart container ${id} for panel ${title}`)
 
-        return `<div>
+        if (window.echartOptions.renderer === 'svg') {
+            return `<div>
+                    <div id="${id}" class="chart"></div>
+                </div>`
+        } else {
+            return `<div>
                     <div><h3>${title}</h3></div>
                     <div>${query}</div>
                     <div id="${id}" class="chart"></div>
                 </div>`
+        }
     }
 
     function renderPanelsInElement(panels) {

@@ -89,7 +89,7 @@ function nameOf(metric) {
  * @param dataSet
  * @param options
  */
-function buildEchartOption(dataSet, options) {
+function buildEchartOption(panel, dataSet, options) {
     const {
         title,
         subtitle,
@@ -114,15 +114,15 @@ function buildEchartOption(dataSet, options) {
                 return [pt[0], '10%'];
             }
         },
-        // title: {
-        //     left: 'center',
-        //     text: title,
-        //     textStyle: {
-        //         fontSize: 24,
-        //         fontWeight: 'bold',
-        //     },
-        //     subtext: subtitle
-        // },
+        title: {
+            left: 'center',
+            text: panel.title,
+            textStyle: {
+                fontSize: 24,
+                fontWeight: 'bold',
+            },
+            subtext: panel.query
+        },
         backgroundColor: "#FFF",
         animation: false,
         // legend: {
@@ -142,7 +142,7 @@ function buildEchartOption(dataSet, options) {
             backgroundColor: '#fff'
         },
         toolbox: {
-            show: false,
+            show: true,
             feature: {
                 saveAsImage: {}
             }
@@ -167,6 +167,12 @@ function buildEchartOption(dataSet, options) {
                     return formatter(value);
                 }
             }
+        },
+        legend: {
+            show: true,
+            orient: 'vertical',
+            left: 'right',
+            data: ['Email', 'Union Ads', 'Video Ads', 'Direct', 'Search Engine'],
         },
         series: dataSet.map(item => {
             return {

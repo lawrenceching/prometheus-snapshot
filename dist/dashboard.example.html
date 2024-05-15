@@ -1,4 +1,4 @@
-<html>
+<html lang="en">
 <head>
     <title>Dashboard</title>
     <script integrity="sha512-k37wQcV4v2h6jgYf5IUz1MoSKPpDs630XGSmCaCCOXxy2awgAWKHGZWr9nMyGgk3IOxA1NxdkN8r1JHgkUtMoQ=="
@@ -158,8 +158,9 @@ function nameOf(metric) {
  *             }
  * ]
  * @param dataSet
+ * @param options
  */
-function buildEchartOption(dataSet, options) {
+function buildEchartOption(panel, dataSet, options) {
     const {
         title,
         subtitle,
@@ -172,7 +173,7 @@ function buildEchartOption(dataSet, options) {
         showLegend
     } = Object.assign({}, defaultOptions, options);
 
-    const option = {
+    return {
         tooltip: {
             trigger: 'axis',
             showContent: true,
@@ -184,15 +185,15 @@ function buildEchartOption(dataSet, options) {
                 return [pt[0], '10%'];
             }
         },
-        // title: {
-        //     left: 'center',
-        //     text: title,
-        //     textStyle: {
-        //         fontSize: 24,
-        //         fontWeight: 'bold',
-        //     },
-        //     subtext: subtitle
-        // },
+        title: {
+            left: 'center',
+            text: panel.title,
+            textStyle: {
+                fontSize: 24,
+                fontWeight: 'bold',
+            },
+            subtext: panel.query
+        },
         backgroundColor: "#FFF",
         animation: false,
         // legend: {
@@ -212,7 +213,7 @@ function buildEchartOption(dataSet, options) {
             backgroundColor: '#fff'
         },
         toolbox: {
-            show: false,
+            show: true,
             feature: {
                 saveAsImage: {}
             }
@@ -238,9 +239,14 @@ function buildEchartOption(dataSet, options) {
                 }
             }
         },
+        legend: {
+            show: true,
+            orient: 'vertical',
+            left: 'right',
+            data: ['Email', 'Union Ads', 'Video Ads', 'Direct', 'Search Engine'],
+        },
         series: dataSet.map(item => {
-            const now = Date.now();
-            const dataSet = {
+            return {
                 name: nameOf(item.metric),
                 type: 'line',
                 smooth: true,
@@ -273,18 +279,14 @@ function buildEchartOption(dataSet, options) {
                         }
                     }
 
-
                     return [
                         timestampInUnixSeconds,
-                        Math.floor(number * 10) / 10
+                        Math.floor(number * 100) / 100
                     ]
                 })
             }
-            return dataSet
         })
     };
-
-    return option;
 }
 
 // END
@@ -299,22 +301,35 @@ export {SUPPORTED_UNITS as UNITS};
             padding: 0;
         }
 
-        .container {
-            margin-left: 10px;
-            margin-right: 10px;
+        #dashboard {
+            display: flex;
+            flex-direction: column;
+            gap: 100px;
+            padding: 10px 10px 10px 10px;
         }
 
         .tile {
-            width: 100%;
-            height: 500px;
+            margin: auto;
+            height: 30%;
+        }
+
+        .container {
+            /*margin: 50px 10px;*/
+        }
+
+        .chart {
+            width: 1500px;
+            height: 1500px;
         }
 
         .divider {
-            margin-top: 25px;
-            margin-bottom: 25px;
             background-color: grey;
             width: 100%;
-            height: 2px;
+            height: 1px;
+        }
+
+        .chart svg {
+            user-select: auto !important;
         }
 
 
@@ -352,7 +367,11 @@ export {SUPPORTED_UNITS as UNITS};
     window.fetchCache = {}
 
 </script>
-<script type="module" type="text/javascript">
+<script type="module">
+
+    window.echartOptions = {
+        renderer: 'svg'
+    }
 
     import buildEchartOption from "./src/core/echart-option-builder.js";
     import Prometheus from "./src/datasource/prometheus.js";
@@ -367,7 +386,7 @@ export {SUPPORTED_UNITS as UNITS};
         const dataSet = [
             {
                 metric: 'pod-name_container_name',
-                data: [
+                values: [
                     {time: now + 1000 * 10, value: Math.floor(Math.random())},
                     {time: now + 1000 * 20, value: Math.floor(Math.random())},
                     {time: now + 1000 * 30, value: Math.floor(Math.random())},
@@ -381,7 +400,7 @@ export {SUPPORTED_UNITS as UNITS};
                 ]
             }
         ]
-        const option = buildEchartOption(dataSet, {
+        const option = buildEchartOption(panel, dataSet, {
             unit: panel.unit,
         })
         chart.setOption(option);
@@ -416,12 +435,17 @@ export {SUPPORTED_UNITS as UNITS};
      */
     function renderTimeSeries(panel, elementId, data) {
         console.log(`render time series panel: data=${JSON.stringify(data)}`)
-        var chart = echarts.init(document.getElementById(elementId));
+        var chart = echarts.init(document.getElementById(elementId), null, {
+            renderer: window.echartOptions.renderer || 'svg',
+            useDirtyRect: false
+        });
 
-        const option = buildEchartOption(data, {
+        const option = buildEchartOption(panel, data, {
             unit: panel.unit,
         })
         chart.setOption(option);
+        console.log(`register resize event listener for echart ${panel.title}`);
+        window.addEventListener('resize', chart.resize)
     }
 
     function prometheusResponseToEchartData(resp) {
@@ -504,27 +528,54 @@ export {SUPPORTED_UNITS as UNITS};
         ]
     }
 
-    function renderPanelsInElement(panels) {
+    function uuidv4() {
+        return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
+            (+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
+        );
+    }
 
-        return panels.map(panel => {
-            const id = Math.random()
-            echartInitFunctions.push(async () => {
+    function renderPanelInElement(panel) {
+        const id = "echart-" + uuidv4();
+        const { title, query } = panel;
 
-                const query = panel.query;
+        echartInitFunctions.push(async () => {
+            const query  = panel.query;
+            const resp = await prometheus.queryRange(query, startTimeInUnixSeconds, endTimeInUnixSeconds);
+            let data = null;
+            if (!resp.ok) {
+                console.log(`failed to fetch data from ${address}`)
+            } else {
+                const json = data = await resp.json();
+                window.fetchCache[resp.url] = JSON.stringify(json);
+                console.log(`persistent "${title}" data into HTML`);
+            }
 
-                const resp = await prometheus.queryRange(query, startTimeInUnixSeconds, endTimeInUnixSeconds);
-                let data = null;
-                if (!resp.ok) {
-                    console.log(`failed to fetch data from ${address}`)
-                } else {
-                    const json = data = await resp.json();
-                    window.fetchCache[resp.url] = JSON.stringify(json);
-                }
-
-                renderTimeSeries(panel, id, prometheusResponseToEchartData(data));
-            })
-            return `<div id="${id}" class="col tile"></div>`
+            renderTimeSeries(panel, id, prometheusResponseToEchartData(data));
+            console.log(`rendered chart ${panel.title} to container ${id}`)
         })
+
+        console.log(`created echart container ${id} for panel ${title}`)
+
+        if (window.echartOptions.renderer === 'svg') {
+            return `<div>
+                    <div id="${id}" class="chart"></div>
+                </div>`
+        } else {
+            return `<div>
+                    <div><h3>${title}</h3></div>
+                    <div>${query}</div>
+                    <div id="${id}" class="chart"></div>
+                </div>`
+        }
+    }
+
+    function renderPanelsInElement(panels) {
+        return panels
+            .map(panel => {
+                return `
+                <div class="col"> ${renderPanelInElement(panel)}</div>
+                `
+            })
             .join("\n")
     }
 
@@ -541,47 +592,40 @@ export {SUPPORTED_UNITS as UNITS};
 
         const {title, query, type} = panel;
 
-        const resp = await prometheus.queryRange(query, startTimeInUnixSeconds, endTimeInUnixSeconds);
-        let data = null;
-        if (!resp.ok) {
-            console.log(`failed to fetch data from ${address}`)
-        } else {
-            const json = data = await resp.json();
-            window.fetchCache[resp.url] = JSON.stringify(json);
-        }
-
-        const scriptEl = document.getElementById('persistent-data')
-        scriptEl.innerHTML = `${scriptEl.innerHTML}
-                 window.fetchCache = ${JSON.stringify(window.fetchCache)}
-                `
-        console.log(`persistent "${title}" data into HTML`);
-
         switch (type) {
             case TYPE_TIME_SERIES: {
+
+                if(query === null || query === undefined || query.trim() === '') {
+                    continue;
+                }
+
                 const id = `panel-${++indexOfPanelId}`;
                 dashboardEl.innerHTML = dashboardEl.innerHTML + `
-                <div class="row">
+                <div class="tile row">
                     <div class="panel-title">${panel.title}</div>
-                    <div id="${id}" class="col tile"></div>
-                    <div class="divider"></div>
+                    <div id="${id}" class="col tile">${renderPanelInElement(panel)}</div>
                 </div>
+                <div class="tile divider"></div>
                 `
-                echartInitFunctions.push(() => {
-                    renderTimeSeries(panel, id, prometheusResponseToEchartData(data));
-                })
+
                 break;
             }
             case TYPE_ROW: {
                 const subPanels = panel.panels;
+                const rowId = `echart-row-${uuidv4()}`;
                 console.log(`rendering row ${title} with ${subPanels.length} sub panels`);
                 dashboardEl.innerHTML = dashboardEl.innerHTML + `
-                    <div class="container text-center">
+
+                    <div class="tile container text-center">
                         <div class="row">
-                            <div class="panel-title">${panel.title}</div>
+                            <div class="h1 panel-title">${panel.title}</div>
+                            <button class="btn btn-dark" type="button" data-bs-toggle="collapse" data-bs-target="#${rowId}" aria-expanded="false" aria-controls="${rowId}">Collapse</button>
                         </div>
-                        <div class="row">${renderPanelsInElement(subPanels)}</div>
-                        <div class="row"><div class="divider"></div></div>
-                    </div>`
+                        <div class="row collapse show" id="${rowId}">${renderPanelsInElement(subPanels)}</div>
+
+                    </div>
+                    <div class="tile divider"></div>
+`
             }
         }
     }
