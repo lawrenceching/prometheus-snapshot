@@ -1,6 +1,6 @@
 import fs from 'fs'
 import inline from 'web-resource-inliner'
-import packageJson from "../package.json" assert { type: "json" }
+import packageJson from "../package.json" with { type: "json" }
 
 const conf = packageJson["web-resource-inliner"]
 const { source, destination } = conf;
