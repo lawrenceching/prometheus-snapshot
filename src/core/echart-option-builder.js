@@ -87,6 +87,7 @@ function nameOf(metric) {
  *             }
  * ]
  * @param dataSet
+ * @param options
  */
 function buildEchartOption(dataSet, options) {
     const {
@@ -101,7 +102,7 @@ function buildEchartOption(dataSet, options) {
         showLegend
     } = Object.assign({}, defaultOptions, options);
 
-    const option = {
+    return {
         tooltip: {
             trigger: 'axis',
             showContent: true,
@@ -168,8 +169,7 @@ function buildEchartOption(dataSet, options) {
             }
         },
         series: dataSet.map(item => {
-            const now = Date.now();
-            const dataSet = {
+            return {
                 name: nameOf(item.metric),
                 type: 'line',
                 smooth: true,
@@ -202,18 +202,14 @@ function buildEchartOption(dataSet, options) {
                         }
                     }
 
-
                     return [
                         timestampInUnixSeconds,
                         Math.floor(number * 100) / 100
                     ]
                 })
             }
-            return dataSet
         })
     };
-
-    return option;
 }
 
 // END
