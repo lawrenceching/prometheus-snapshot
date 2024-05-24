@@ -21,7 +21,7 @@
 
   },
   "web-resource-inliner": {
-    "source": "./dashboard.example.html",
-    "destination": "./dist/dashboard.example.html"
+    "source": "./dist/dashboard.example.html",
+    "destination": "./dist/dashboard.example.inline.html"
   }
 }

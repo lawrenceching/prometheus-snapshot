@@ -14,7 +14,7 @@ if(!fs.existsSync(destDir)) {
 inline.html(
     {
         fileContent: readFileSync(source),
-        relativeTo: "./",
+        relativeTo: "./dist",
     },
     (err, result) => {
         if (err) { throw err }
