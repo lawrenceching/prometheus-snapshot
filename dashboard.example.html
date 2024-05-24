@@ -24,6 +24,10 @@
             padding: 10px 10px 10px 10px;
         }
 
+        #control {
+            padding: 10px;
+        }
+
         .tile {
             margin: auto;
             height: 30%;
@@ -57,6 +61,16 @@
 </head>
 <body>
 <h1>Dashboard</h1>
+<div id="control">
+    <div class="mb-3">
+        <label for="dataSource" class="form-label">Data Source</label>
+        <input class="form-control" id="dataSource" placeholder="https://prometheus.demo.do.prometheus.io">
+    </div>
+    <div class="mb-3">
+        <label for="dashboardDefinition" class="form-label">Dashboard</label>
+        <textarea class="form-control" id="dashboardDefinition" rows="3"></textarea>
+    </div>
+</div>
 <div id="dashboard" class="container text-center">
 </div>
 <script id="persistent-data">
@@ -200,6 +214,117 @@
 
     }
 
+    function onDashboardUpdated() {
+
+        function renderPanelInElement(panel) {
+            const id = "echart-" + uuidv4();
+            const { title, query } = panel;
+
+            echartInitFunctions.push(async () => {
+                const query  = panel.query;
+                const resp = await prometheus.queryRange(query, startTimeInUnixSeconds, endTimeInUnixSeconds);
+                let data = null;
+                if (!resp.ok) {
+                    console.log(`failed to fetch data from ${address}`)
+                } else {
+                    const json = data = await resp.json();
+                    window.fetchCache[resp.url] = JSON.stringify(json);
+                    console.log(`persistent "${title}" data into HTML`);
+                }
+
+                renderTimeSeries(panel, id, prometheusResponseToEchartData(data));
+                console.log(`rendered chart ${panel.title} to container ${id}`)
+            })
+
+            console.log(`created echart container ${id} for panel ${title}`)
+
+            if (window.echartOptions.renderer === 'svg') {
+                return `<div>
+                    <div id="${id}" class="chart"></div>
+                </div>`
+            } else {
+                return `<div>
+                    <div><h3>${title}</h3></div>
+                    <div>${query}</div>
+                    <div id="${id}" class="chart"></div>
+                </div>`
+            }
+        }
+
+        function renderPanelsInElement(panels) {
+            return panels
+                .map(panel => {
+                    return `
+                <div class="col"> ${renderPanelInElement(panel)}</div>
+                `
+                })
+                .join("\n")
+        }
+
+        const el = document.querySelector("#dashboardDefinition")
+        let dashboard = '';
+        try {
+            dashboard = JSON.parse(el.value);
+        } catch (e) {
+            console.log(`unable to parse dashboard JSON definition: ${e}`)
+            return;
+        }
+
+        const address = dashboard.dataSources[0].address;
+        const prometheus = new Prometheus(address);
+        const panel = dashboard.panels[0];
+        const {title, query} = panel;
+
+        let indexOfPanelId = 0;
+        const echartInitFunctions = [];
+
+        const panels = dashboard.panels;
+        for (const panel of panels) {
+
+            const {title, query, type} = panel;
+
+            switch (type) {
+                case TYPE_TIME_SERIES: {
+
+                    if(query === null || query === undefined || query.trim() === '') {
+                        continue;
+                    }
+
+                    const id = `panel-${++indexOfPanelId}`;
+                    dashboardEl.innerHTML = dashboardEl.innerHTML + `
+                <div class="tile row">
+                    <div class="panel-title">${panel.title}</div>
+                    <div id="${id}" class="col tile">${renderPanelInElement(panel)}</div>
+                </div>
+                <div class="tile divider"></div>
+                `
+
+                    break;
+                }
+                case TYPE_ROW: {
+                    const subPanels = panel.panels;
+                    const rowId = `echart-row-${uuidv4()}`;
+                    console.log(`rendering row ${title} with ${subPanels.length} sub panels`);
+                    dashboardEl.innerHTML = dashboardEl.innerHTML + `
+
+                    <div class="tile container text-center">
+                        <div class="row">
+                            <div class="h1 panel-title">${panel.title}</div>
+                            <button class="btn btn-dark" type="button" data-bs-toggle="collapse" data-bs-target="#${rowId}" aria-expanded="false" aria-controls="${rowId}">Collapse</button>
+                        </div>
+                        <div class="row collapse show" id="${rowId}">${renderPanelsInElement(subPanels)}</div>
+
+                    </div>
+                    <div class="tile divider"></div>
+`
+                }
+            }
+        }
+
+        echartInitFunctions.forEach(fn => fn());
+    }
+
+
     const endTimeInUnixSeconds = Date.now() / 1000
     const startTimeInUnixSeconds = endTimeInUnixSeconds - 900;
 
@@ -244,109 +369,23 @@
         ]
     }
 
+    const defaultDashboardDefinition = dashboard;
+
+    const dashboardDefinitionTextArea = document.querySelector("#dashboardDefinition")
+
+    if(dashboardDefinitionTextArea.value === '') {
+        dashboardDefinitionTextArea.value = JSON.stringify(defaultDashboardDefinition, null, 4);
+        console.log(`initialized default dashboard definition`);
+    }
+
     function uuidv4() {
         return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
             (+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
         );
     }
 
-    function renderPanelInElement(panel) {
-        const id = "echart-" + uuidv4();
-        const { title, query } = panel;
+    onDashboardUpdated();
 
-        echartInitFunctions.push(async () => {
-            const query  = panel.query;
-            const resp = await prometheus.queryRange(query, startTimeInUnixSeconds, endTimeInUnixSeconds);
-            let data = null;
-            if (!resp.ok) {
-                console.log(`failed to fetch data from ${address}`)
-            } else {
-                const json = data = await resp.json();
-                window.fetchCache[resp.url] = JSON.stringify(json);
-                console.log(`persistent "${title}" data into HTML`);
-            }
-
-            renderTimeSeries(panel, id, prometheusResponseToEchartData(data));
-            console.log(`rendered chart ${panel.title} to container ${id}`)
-        })
-
-        console.log(`created echart container ${id} for panel ${title}`)
-
-        if (window.echartOptions.renderer === 'svg') {
-            return `<div>
-                    <div id="${id}" class="chart"></div>
-                </div>`
-        } else {
-            return `<div>
-                    <div><h3>${title}</h3></div>
-                    <div>${query}</div>
-                    <div id="${id}" class="chart"></div>
-                </div>`
-        }
-    }
-
-    function renderPanelsInElement(panels) {
-        return panels
-            .map(panel => {
-                return `
-                <div class="col"> ${renderPanelInElement(panel)}</div>
-                `
-            })
-            .join("\n")
-    }
-
-    const address = dashboard.dataSources[0].address;
-    const prometheus = new Prometheus(address);
-    const panel = dashboard.panels[0];
-    const {title, query} = panel;
-
-    let indexOfPanelId = 0;
-    const echartInitFunctions = [];
-
-    const panels = dashboard.panels;
-    for (const panel of panels) {
-
-        const {title, query, type} = panel;
-
-        switch (type) {
-            case TYPE_TIME_SERIES: {
-
-                if(query === null || query === undefined || query.trim() === '') {
-                    continue;
-                }
-
-                const id = `panel-${++indexOfPanelId}`;
-                dashboardEl.innerHTML = dashboardEl.innerHTML + `
-                <div class="tile row">
-                    <div class="panel-title">${panel.title}</div>
-                    <div id="${id}" class="col tile">${renderPanelInElement(panel)}</div>
-                </div>
-                <div class="tile divider"></div>
-                `
-
-                break;
-            }
-            case TYPE_ROW: {
-                const subPanels = panel.panels;
-                const rowId = `echart-row-${uuidv4()}`;
-                console.log(`rendering row ${title} with ${subPanels.length} sub panels`);
-                dashboardEl.innerHTML = dashboardEl.innerHTML + `
-
-                    <div class="tile container text-center">
-                        <div class="row">
-                            <div class="h1 panel-title">${panel.title}</div>
-                            <button class="btn btn-dark" type="button" data-bs-toggle="collapse" data-bs-target="#${rowId}" aria-expanded="false" aria-controls="${rowId}">Collapse</button>
-                        </div>
-                        <div class="row collapse show" id="${rowId}">${renderPanelsInElement(subPanels)}</div>
-
-                    </div>
-                    <div class="tile divider"></div>
-`
-            }
-        }
-    }
-
-    echartInitFunctions.forEach(fn => fn());
 </script>
 </body>
 </html>
