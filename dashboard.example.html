@@ -69,6 +69,7 @@
     <div class="mb-3">
         <label for="dashboardDefinition" class="form-label">Dashboard</label>
         <textarea class="form-control" id="dashboardDefinition" rows="3"></textarea>
+        <button id="btn-update">Update</button>
     </div>
 </div>
 <div id="dashboard" class="container text-center">
@@ -261,6 +262,8 @@
                 .join("\n")
         }
 
+        dashboardEl.innerHTML = ``
+
         const el = document.querySelector("#dashboardDefinition")
         let dashboard = '';
         try {
@@ -383,6 +386,12 @@
             (+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
         );
     }
+
+    const updateButton = document.getElementById('btn-update');
+    updateButton.addEventListener('click', (e) => {
+        onDashboardUpdated();
+        console.log(`Update Button: click`)
+    })
 
     onDashboardUpdated();
 
