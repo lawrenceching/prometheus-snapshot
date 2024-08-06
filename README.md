@@ -102,6 +102,11 @@ docker container rm $ID
 
 ## Development
 
+```bash
+npx parcel build dashboard.example.html
+node build/inline.js
+```
+
 macOS
 
 Add below items to optionalDependencies

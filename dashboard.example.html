@@ -9,7 +9,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             crossorigin="anonymous"></script>
-    <script type="module" src="./src/core/echart-option-builder.js"></script>
     <style>
         html, body {
             height: 100%;
@@ -74,6 +73,8 @@
 </div>
 <div id="dashboard" class="container text-center">
 </div>
+<div id="data" hidden>
+</div>
 <script id="persistent-data">
     window.originFetch = window.fetch;
     window.fetch = function (url) {
@@ -98,15 +99,344 @@
     window.fetchCache = {}
 
 </script>
+
 <script type="module">
+
+    {
+        // START
+        const SUPPORTED_UNITS = {
+            percent_0_to_1: 'Percent (0.0-1.0)',
+            second: 'second',
+            bytes: 'bytes',
+            number: 'number'
+        };
+
+
+        const defaultOptions = {
+            unit: SUPPORTED_UNITS.number,
+        }
+
+        const formatters = {};
+        formatters[SUPPORTED_UNITS.bytes] = (value) => {
+            const b = 1;
+            const kb = 1000 * b;
+            const mb = 1000 * kb;
+            const gb = 1000 * mb;
+            const tb = 1000 * gb;
+            if (value > tb) {
+                return `${(value / tb).toFixed(2)} TB`;
+            }
+            if (value > gb) {
+                return `${(value / gb).toFixed(2)} GB`;
+            }
+            if (value > mb) {
+                return `${(value / mb).toFixed(2)} MB`;
+            }
+            if (value > kb) {
+                return `${(value / kb).toFixed(2)} KB`;
+            }
+            return `${(value / kb).toFixed(2)} B`;
+        };
+
+        formatters[SUPPORTED_UNITS.percent_0_to_1] = (value) => {
+            return `${(parseFloat(value) * 100).toFixed(2)}%`;
+        }
+
+        formatters[SUPPORTED_UNITS.second] = (value) => {
+            return `${value}ms`
+        }
+
+        formatters[SUPPORTED_UNITS.number] = (value) => {
+            return `${value}`
+        }
+
+        /**
+         * {
+         *                     "handler": "subroute",
+         *                     "instance": "localhost:2019",
+         *                     "job": "caddy",
+         *                     "server": "srv0",
+         *                     "<other metric key>": "<other values>"
+         * }
+         * @param metric
+         */
+        function nameOf(metric) {
+            const labels = []
+            for (const [key, value] of Object.entries(metric)) {
+                labels.push(`${key}=${value}`)
+            }
+            return labels.join(' ');
+        }
+
+        /**
+
+         * dataSet is:
+         * [
+         *             {
+         *                 "metric": {
+         *                     "handler": "subroute",
+         *                     "instance": "localhost:2019",
+         *                     "job": "caddy",
+         *                     "server": "srv0"
+         *                 },
+         *                 "values": [
+         *                     [
+         *                         1714492874.299,
+         *                         "1.3555555555555554"
+         *                     ],
+         *                     [
+         *                         1714496472.299,
+         *                         "1.2"
+         *                     ]
+         *                 ]
+         *             }
+         * ]
+         * @param dataSet
+         * @param options
+         */
+        function buildEchartOption(panel, dataSet, options) {
+            const {
+                title,
+                subtitle,
+                renderer,
+                unit,
+                headless,
+                width,
+                height,
+                output,
+                showLegend
+            } = Object.assign({}, defaultOptions, options);
+
+            return {
+                tooltip: {
+                    trigger: 'axis',
+                    showContent: true,
+                    valueFormatter: function (value) {
+                        const formatter = !!formatters[unit] ? formatters[unit] : (v) => v;
+                        return formatter(value);
+                    },
+                    position: function (pt) {
+                        return [pt[0], '10%'];
+                    }
+                },
+                title: {
+                    left: 'center',
+                    text: panel.title,
+                    textStyle: {
+                        fontSize: 24,
+                        fontWeight: 'bold',
+                    },
+                    subtext: panel.query
+                },
+                backgroundColor: "#FFF",
+                animation: false,
+                // legend: {
+                //     left: 'right',
+                //     show: showLegend,
+                //     top: 'center',
+                //     orient: 'vertical',
+                //     icon: 'circle',
+                //     data: dataSet.length > 10 ? null : dataSet.map(d => d.name)
+                // },
+                grid: {
+                    left: '3%',
+                    right: '15%',
+                    bottom: '3%',
+                    containLabel: true,
+                    show: false,
+                    backgroundColor: '#fff'
+                },
+                toolbox: {
+                    show: true,
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    type: 'time',
+                    boundaryGap: false,
+                    splitNumber: 5,
+                    axisLabel: {
+                        formatter: function (value, index) {
+                            const date = new Date(value);
+                            return `${date.getHours()}/${date.getMinutes()}`
+                        }
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    boundaryGap: [0, '20%'],
+                    axisLabel: {
+                        formatter: function (value, index) {
+                            const formatter = !!formatters[unit] ? formatters[unit] : (v) => v;
+                            return formatter(value);
+                        }
+                    }
+                },
+                legend: {
+                    show: true,
+                    orient: 'vertical',
+                    left: 'right',
+                    data: ['Email', 'Union Ads', 'Video Ads', 'Direct', 'Search Engine'],
+                },
+                series: dataSet.map(item => {
+                    return {
+                        name: nameOf(item.metric),
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'none',
+                        xAxis: {
+                            type: 'time',
+                            boundaryGap: false
+                        },
+                        yAxis: {
+                            type: 'value',
+                            boundaryGap: [0, '100%']
+                        },
+                        /**
+                         * data is an array that contains a list of arrays:
+                         * [
+                         *     [1714492874.299,"1.3555555555555554"],
+                         *     [1714492888.299,"1.2444444444444442"]
+                         * ]
+                         *
+                         * The inner array has two item, the first item is timestamp in unix milliseconds, and second item is the value
+                         */
+                        data: item.values.map(value => {
+                            const timestampInUnixSeconds = value[0];
+                            let number = value[1] === "NaN" ? 0 : value[1];
+
+                            switch (unit) {
+                                case SUPPORTED_UNITS.second : {
+                                    number = number * 1000;
+                                    break;
+                                }
+                            }
+
+                            return [
+                                timestampInUnixSeconds,
+                                Math.floor(number * 100) / 100
+                            ]
+                        })
+                    }
+                })
+            };
+        }
+
+        window.EchartOptionBuilder={}
+        window.EchartOptionBuilder.buildEchartOption = buildEchartOption;
+        window.EchartOptionBuilder.UNITS = SUPPORTED_UNITS;
+    }
+
+    {
+        const DEFAULT_OPTIONS = {
+            step: 14
+        }
+
+        function getName(result) {
+            const labels = []
+            for(let key in result.metric) {
+                if (result.metric.hasOwnProperty(key)) {
+                    labels.push(`${key}=${result.metric[key]}`)
+                }
+            }
+            return labels.join(" ")
+        }
+
+        class Prometheus {
+
+            constructor(url) {
+                this.url = url;
+            }
+
+            async queryRange (promQL, startInSeconds, endInSeconds, _options) {
+
+                const options = Object.assign({}, DEFAULT_OPTIONS, _options)
+
+                const url = new URL(`${this.url}/api/v1/query_range`);
+                url.searchParams.append('query', promQL)
+                url.searchParams.append('start', startInSeconds)
+                url.searchParams.append('end', endInSeconds)
+                url.searchParams.append('step', options.step)
+                // log(`> ${url.href}`)
+                const resp = await fetch(url.href)
+
+                // window.fetchCache[url] = resp;
+
+                return resp;
+            }
+
+            async queryRangeSince (promQL, durationInSeconds, options) {
+                const endInSeconds = Date.now() / 1000;
+                const startInSeconds = endInSeconds - durationInSeconds;
+                return await this.queryRange(promQL, startInSeconds, endInSeconds, options);
+            }
+
+        }
+
+        window.Prometheus = Prometheus
+    }
+
+
+    class DashboardManager {
+
+        static KEY_DEFINITION = 'definition'
+
+        definition
+
+        init() {
+            console.log(`initializing dashboard manager`)
+
+            this.definition = JSON.parse(this.load(DashboardManager.KEY_DEFINITION));
+        }
+
+        static #findElement(key) {
+            return document.querySelector(`#data div#pd-${key}`)
+        }
+
+        load(key) {
+            const el = DashboardManager.#findElement(key)
+            const v = (el === null || el === undefined) ? null : el.innerText;
+            console.log(`loaded ${key}: ${v}`)
+            return v;
+        }
+
+        save(key, value) {
+
+            console.log(`save ${key}: ${value}`)
+            let el = this.load(key);
+            if(el == null) {
+                console.log(`save ${key} to new div`)
+                const root = document.querySelector(`#data`)
+                el = document.createElement('div')
+                el.id = `pd-${key}`
+                root.appendChild(el)
+
+            } else {
+                console.log(`save ${key} to exist div`)
+                el = DashboardManager.#findElement(key)
+            }
+
+            el.innerText = value
+
+        }
+
+        setDefinition(newValue) {
+            this.save(DashboardManager.KEY_DEFINITION, newValue)
+            this.definition = newValue;
+        }
+    }
+
+    const dm  = window.dm = new DashboardManager()
+    dm.init()
 
     window.echartOptions = {
         renderer: 'svg'
     }
 
-    import buildEchartOption from "./src/core/echart-option-builder.js";
-    import Prometheus from "./src/datasource/prometheus.js";
-    import {UNITS} from "./src/core/echart-option-builder.js"
+    const buildEchartOption = window.EchartOptionBuilder.buildEchartOption;
+    const UNITS = window.EchartOptionBuilder.UNITS;
+    const Prometheus = window.Prometheus;
 
     const TYPE_TIME_SERIES = 'time-series';
     const TYPE_ROW = 'row'; // a row contains another set of panels
@@ -215,7 +545,7 @@
 
     }
 
-    function onDashboardUpdated() {
+    function onDashboardUpdated(dashboard) {
 
         function renderPanelInElement(panel) {
             const id = "echart-" + uuidv4();
@@ -263,15 +593,11 @@
         }
 
         dashboardEl.innerHTML = ``
+        const dashboardAsString = JSON.stringify(dashboard, null, 4);
+        dm.save(DashboardManager.KEY_DEFINITION, dashboardAsString)
 
         const el = document.querySelector("#dashboardDefinition")
-        let dashboard = '';
-        try {
-            dashboard = JSON.parse(el.value);
-        } catch (e) {
-            console.log(`unable to parse dashboard JSON definition: ${e}`)
-            return;
-        }
+        el.value = dashboardAsString;
 
         const address = dashboard.dataSources[0].address;
         const prometheus = new Prometheus(address);
@@ -333,7 +659,7 @@
 
     const dashboardEl = document.getElementById('dashboard');
 
-    const dashboard = {
+    const defaultDashboardDefinition = {
         title: 'Performance Dashboard',
         dataSources: [
             {
@@ -372,8 +698,6 @@
         ]
     }
 
-    const defaultDashboardDefinition = dashboard;
-
     const dashboardDefinitionTextArea = document.querySelector("#dashboardDefinition")
 
     if(dashboardDefinitionTextArea.value === '') {
@@ -389,11 +713,17 @@
 
     const updateButton = document.getElementById('btn-update');
     updateButton.addEventListener('click', (e) => {
-        onDashboardUpdated();
+        const el = document.querySelector("#dashboardDefinition")
+        onDashboardUpdated(JSON.parse(el.value));
         console.log(`Update Button: click`)
     })
 
-    onDashboardUpdated();
+    let dashboard = JSON.parse(dm.load(DashboardManager.KEY_DEFINITION));
+    onDashboardUpdated(dashboard === null ? defaultDashboardDefinition : dashboard);
+
+    window.setDashboardDefinition = function(def) {
+        onDashboardUpdated(def)
+    }
 
 </script>
 </body>
